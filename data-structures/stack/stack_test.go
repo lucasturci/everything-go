@@ -15,8 +15,12 @@ func TestPush(t *testing.T) {
 	if s.Size() != 1 {
 		t.Errorf("Expected size 1, got %d", s.Size())
 	}
-	if s.Top() != 10 {
-		t.Errorf("Expected top element 10, got %d", s.Top())
+	val, err := s.Top()
+	if err != nil {
+		t.Errorf("Unexpected error from Top(): %v", err)
+	}
+	if val != 10 {
+		t.Errorf("Expected top element 10, got %d", val)
 	}
 }
 
@@ -62,10 +66,22 @@ func TestTop(t *testing.T) {
 	s.Push(10)
 	s.Push(20)
 
-	if s.Top() != 20 {
-		t.Errorf("Expected top element 20, got %d", s.Top())
+	val, err := s.Top()
+	if err != nil {
+		t.Errorf("Unexpected error from Top(): %v", err)
+	}
+	if val != 20 {
+		t.Errorf("Expected top element 20, got %d", val)
 	}
 	if s.Size() != 2 {
 		t.Errorf("Expected size to remain 2, got %d", s.Size())
+	}
+}
+
+func TestTopEmpty(t *testing.T) {
+	s := Create[int]()
+	_, err := s.Top()
+	if err == nil {
+		t.Error("Expected error when getting top element from empty stack")
 	}
 }
