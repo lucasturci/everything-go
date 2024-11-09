@@ -9,6 +9,10 @@ func Create[T any]() Vector[T] {
 	return []T{}
 }
 
+func CreateWithElements[T any](elements []T) Vector[T] {
+	return elements
+}
+
 func CreateWithSize[T any](n int) Vector[T] {
 	return make([]T, n)
 }

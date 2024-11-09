@@ -11,6 +11,13 @@ func TestCreate(t *testing.T) {
 	}
 }
 
+func TestCreateWithElements(t *testing.T) {
+	v := CreateWithElements[int]([]int{1, 2, 3})
+	if v.Size() != 3 {
+		t.Errorf("Expected size 3, got %d", v.Size())
+	}
+}
+
 func TestCreateWithSize(t *testing.T) {
 	v := CreateWithSize[int](5)
 	if v.Size() != 5 {
