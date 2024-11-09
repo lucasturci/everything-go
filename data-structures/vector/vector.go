@@ -1,61 +1,62 @@
 package vector
 
-type Vector[T any] struct {
-	elements []T
-	size     int
-}
+import "errors"
+
+type Vector[T any] []T
 
 // Constructors
-func Create[T any]() *Vector[T] {
-	return &Vector[T]{
-		elements: []T{},
-		size:     0,
-	}
+func Create[T any]() Vector[T] {
+	return []T{}
 }
 
-func CreateWithSize[T any](n int) *Vector[T] {
-	return &Vector[T]{
-		elements: make([]T, n),
-		size:     n,
-	}
+func CreateWithSize[T any](n int) Vector[T] {
+	return make([]T, n)
 }
 
-func CreateWithCapacity[T any](n int) *Vector[T] {
-	return &Vector[T]{
-		elements: make([]T, 0, n),
-		size:     0,
-	}
-}
-
-// Accessors
-func (v *Vector[T]) Get(index int) T {
-	return v.elements[index]
-}
-
-func (v *Vector[T]) Set(index int, element T) {
-	v.elements[index] = element
+func CreateWithCapacity[T any](n int) Vector[T] {
+	return make([]T, 0, n)
 }
 
 // Methods
 func (v *Vector[T]) Size() int {
-	return v.size
+	return len(*v)
+}
+
+func (v *Vector[T]) Capacity() int {
+	return cap(*v)
 }
 
 func (v *Vector[T]) PushBack(element T) {
-	v.elements = append(v.elements, element)
-	v.size++
+	*v = append(*v, element)
 }
 
 func (v *Vector[T]) PopBack() {
-	v.elements = v.elements[:len(v.elements)-1]
-	v.size--
+	*v = (*v)[:v.Size()-1]
 }
 
 func (v *Vector[T]) Clear() {
-	v.elements = []T{}
-	v.size = 0
+	*v = Create[T]()
 }
 
 func (v *Vector[T]) Reserve(n int) {
-	v.elements = append(v.elements, make([]T, n)...)
+	if n <= v.Capacity() {
+		return
+	}
+	t := CreateWithCapacity[T](n)
+	copy(t, *v)
+	*v = t
+}
+
+// Now let's implement some common snippets from this cheatsheet: https://ueokande.github.io/go-slice-tricks/
+
+func (v *Vector[T]) Remove(i int) {
+	(*v) = append((*v)[:i], (*v)[i+1:v.Size()]...)
+}
+
+func Copy[T any](dest Vector[T], src Vector[T]) error {
+	if dest.Size() < src.Size() {
+		return errors.New("destination vector does not have enough size")
+	}
+	copy(dest, src)
+	return nil
 }
