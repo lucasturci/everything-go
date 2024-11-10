@@ -9,7 +9,7 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-type Heap[T constraints.Ordered, C comparator.Comparator[T]] struct {
+type Heap[T any, C comparator.Comparator[T]] struct {
 	vector.Vector[T]
 	cmp C
 }
@@ -21,11 +21,11 @@ type MaxHeap[T constraints.Ordered] struct {
 	Heap[T, comparator.Greater[T]]
 }
 
-func Create[T constraints.Ordered, C comparator.Comparator[T]]() Heap[T, C] {
+func Create[T any, C comparator.Comparator[T]]() Heap[T, C] {
 	return Heap[T, C]{}
 }
 
-func CreateWithCapacity[T constraints.Ordered, C comparator.Comparator[T]](capacity int) Heap[T, C] {
+func CreateWithCapacity[T any, C comparator.Comparator[T]](capacity int) Heap[T, C] {
 	return Heap[T, C]{Vector: vector.CreateWithCapacity[T](capacity)}
 }
 
