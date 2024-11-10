@@ -24,11 +24,11 @@ func (s *Stack[T]) Push(element T) {
 
 func (s *Stack[T]) Pop() (ret T, err error) {
 	if s.IsEmpty() {
-		return *new(T), errors.New("stack is empty")
+		return ret, errors.New("stack is empty")
 	}
 	ret, err = s.Top()
 	if err != nil {
-		return *new(T), err
+		return
 	}
 	*s = (*s)[:s.Size()-1]
 	return
@@ -36,7 +36,7 @@ func (s *Stack[T]) Pop() (ret T, err error) {
 
 func (s *Stack[T]) Top() (ret T, err error) {
 	if s.IsEmpty() {
-		return *new(T), errors.New("stack is empty")
+		return ret, errors.New("stack is empty")
 	}
 	return (*s)[s.Size()-1], nil
 }

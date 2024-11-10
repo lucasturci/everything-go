@@ -38,7 +38,7 @@ func (q *Queue[T]) flush() {
 
 func (q *Queue[T]) Pop() (ret T, err error) {
 	if q.IsEmpty() {
-		return *new(T), errors.New("queue is empty")
+		return ret, errors.New("queue is empty")
 	}
 	if q.l.IsEmpty() {
 		q.flush()
@@ -46,9 +46,9 @@ func (q *Queue[T]) Pop() (ret T, err error) {
 	return q.l.Pop()
 }
 
-func (q *Queue[T]) Front() (T, error) {
+func (q *Queue[T]) Front() (ret T, err error) {
 	if q.IsEmpty() {
-		return *new(T), errors.New("queue is empty")
+		return ret, errors.New("queue is empty")
 	}
 	if q.l.IsEmpty() {
 		q.flush()

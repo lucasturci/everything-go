@@ -6,7 +6,7 @@ import (
 	"everything-go/data-structures/comparator"
 	"everything-go/data-structures/vector"
 
-	"golang.org/x/exp/constraints"
+	"cmp"
 )
 
 type Heap[T any, C comparator.Comparator[T]] struct {
@@ -14,10 +14,10 @@ type Heap[T any, C comparator.Comparator[T]] struct {
 	cmp C
 }
 
-type MinHeap[T constraints.Ordered] struct {
+type MinHeap[T cmp.Ordered] struct {
 	Heap[T, comparator.Less[T]]
 }
-type MaxHeap[T constraints.Ordered] struct {
+type MaxHeap[T cmp.Ordered] struct {
 	Heap[T, comparator.Greater[T]]
 }
 
@@ -65,7 +65,7 @@ func (h *Heap[T, C]) Push(x T) {
 
 func (h *Heap[T, C]) Pop() error {
 	if h.Size() == 0 {
-		return errors.New("Empty heap")
+		return errors.New("empty heap")
 	}
 	alg.Swap(&h.Vector[0], &h.Vector[h.Size()-1])
 	h.PopBack()
