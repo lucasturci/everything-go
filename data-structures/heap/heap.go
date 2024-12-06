@@ -21,12 +21,12 @@ type MaxHeap[T cmp.Ordered] struct {
 	Heap[T, comparator.Greater[T]]
 }
 
-func Create[T any, C comparator.Comparator[T]]() Heap[T, C] {
+func New[T any, C comparator.Comparator[T]]() Heap[T, C] {
 	return Heap[T, C]{}
 }
 
-func CreateWithCapacity[T any, C comparator.Comparator[T]](capacity int) Heap[T, C] {
-	return Heap[T, C]{Vector: vector.CreateWithCapacity[T](capacity)}
+func NewWithCapacity[T any, C comparator.Comparator[T]](capacity int) Heap[T, C] {
+	return Heap[T, C]{Vector: vector.NewWithCapacity[T](capacity)}
 }
 
 // Heapify fixes the subtree rooted at i

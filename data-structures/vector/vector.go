@@ -5,19 +5,19 @@ import "errors"
 type Vector[T any] []T
 
 // Constructors
-func Create[T any]() Vector[T] {
+func New[T any]() Vector[T] {
 	return []T{}
 }
 
-func CreateWithElements[T any](elements []T) Vector[T] {
+func NewWithElements[T any](elements []T) Vector[T] {
 	return elements
 }
 
-func CreateWithSize[T any](n int) Vector[T] {
+func NewWithSize[T any](n int) Vector[T] {
 	return make([]T, n)
 }
 
-func CreateWithCapacity[T any](n int) Vector[T] {
+func NewWithCapacity[T any](n int) Vector[T] {
 	return make([]T, 0, n)
 }
 
@@ -39,14 +39,14 @@ func (v *Vector[T]) PopBack() {
 }
 
 func (v *Vector[T]) Clear() {
-	*v = Create[T]()
+	*v = New[T]()
 }
 
 func (v *Vector[T]) Reserve(n int) {
 	if n <= v.Capacity() {
 		return
 	}
-	t := CreateWithCapacity[T](n)
+	t := NewWithCapacity[T](n)
 	copy(t, *v)
 	*v = t
 }

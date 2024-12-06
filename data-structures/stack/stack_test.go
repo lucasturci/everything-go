@@ -2,15 +2,15 @@ package stack
 
 import "testing"
 
-func TestCreate(t *testing.T) {
-	s := Create[int]()
+func TestNew(t *testing.T) {
+	s := New[int]()
 	if s.Size() != 0 {
 		t.Errorf("Expected size 0, got %d", s.Size())
 	}
 }
 
 func TestPush(t *testing.T) {
-	s := Create[int]()
+	s := New[int]()
 	s.Push(10)
 	if s.Size() != 1 {
 		t.Errorf("Expected size 1, got %d", s.Size())
@@ -25,7 +25,7 @@ func TestPush(t *testing.T) {
 }
 
 func TestPop(t *testing.T) {
-	s := Create[int]()
+	s := New[int]()
 	s.Push(10)
 	s.Push(20)
 
@@ -42,7 +42,7 @@ func TestPop(t *testing.T) {
 }
 
 func TestPopEmpty(t *testing.T) {
-	s := Create[int]()
+	s := New[int]()
 	_, err := s.Pop()
 	if err == nil {
 		t.Error("Expected error when popping from empty stack")
@@ -50,7 +50,7 @@ func TestPopEmpty(t *testing.T) {
 }
 
 func TestIsEmpty(t *testing.T) {
-	s := Create[int]()
+	s := New[int]()
 	if !s.IsEmpty() {
 		t.Error("Expected new stack to be empty")
 	}
@@ -62,7 +62,7 @@ func TestIsEmpty(t *testing.T) {
 }
 
 func TestTop(t *testing.T) {
-	s := Create[int]()
+	s := New[int]()
 	s.Push(10)
 	s.Push(20)
 
@@ -79,7 +79,7 @@ func TestTop(t *testing.T) {
 }
 
 func TestTopEmpty(t *testing.T) {
-	s := Create[int]()
+	s := New[int]()
 	_, err := s.Top()
 	if err == nil {
 		t.Error("Expected error when getting top element from empty stack")

@@ -5,7 +5,7 @@ import "errors"
 type Stack[T any] []T
 
 // Constructors
-func Create[T any]() Stack[T] {
+func New[T any]() Stack[T] {
 	return Stack[T]{}
 }
 
@@ -43,7 +43,7 @@ func (s *Stack[T]) Top() (ret T, err error) {
 
 // Functions
 func Reverse[T any](s Stack[T]) Stack[T] {
-	ret := Create[T]()
+	ret := New[T]()
 	for i := s.Size() - 1; i >= 0; i-- {
 		ret.Push(s[i])
 	}

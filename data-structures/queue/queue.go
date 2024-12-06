@@ -12,10 +12,10 @@ type Queue[T any] struct {
 	l stack.Stack[T]
 }
 
-func Create[T any]() Queue[T] {
+func New[T any]() Queue[T] {
 	return Queue[T]{
-		r: stack.Create[T](),
-		l: stack.Create[T](),
+		r: stack.New[T](),
+		l: stack.New[T](),
 	}
 }
 
@@ -33,7 +33,7 @@ func (q *Queue[T]) Size() int {
 
 func (q *Queue[T]) flush() {
 	q.l = stack.Reverse(q.r)
-	q.r = stack.Create[T]()
+	q.r = stack.New[T]()
 }
 
 func (q *Queue[T]) Pop() (ret T, err error) {

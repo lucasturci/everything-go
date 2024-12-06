@@ -4,29 +4,29 @@ import (
 	"testing"
 )
 
-func TestCreate(t *testing.T) {
-	v := Create[int]()
+func TestNew(t *testing.T) {
+	v := New[int]()
 	if v.Size() != 0 {
 		t.Errorf("Expected size 0, got %d", v.Size())
 	}
 }
 
-func TestCreateWithElements(t *testing.T) {
-	v := CreateWithElements[int]([]int{1, 2, 3})
+func TestNewWithElements(t *testing.T) {
+	v := NewWithElements[int]([]int{1, 2, 3})
 	if v.Size() != 3 {
 		t.Errorf("Expected size 3, got %d", v.Size())
 	}
 }
 
-func TestCreateWithSize(t *testing.T) {
-	v := CreateWithSize[int](5)
+func TestNewWithSize(t *testing.T) {
+	v := NewWithSize[int](5)
 	if v.Size() != 5 {
 		t.Errorf("Expected size 5, got %d", v.Size())
 	}
 }
 
-func TestCreateWithCapacity(t *testing.T) {
-	v := CreateWithCapacity[int](5)
+func TestNewWithCapacity(t *testing.T) {
+	v := NewWithCapacity[int](5)
 	if v.Size() != 0 {
 		t.Errorf("Expected size 0, got %d", v.Size())
 	}
@@ -36,7 +36,7 @@ func TestCreateWithCapacity(t *testing.T) {
 }
 
 func TestPushBack(t *testing.T) {
-	v := Create[int]()
+	v := New[int]()
 	v.PushBack(10)
 	if v.Size() != 1 {
 		t.Errorf("Expected size 1, got %d", v.Size())
@@ -47,7 +47,7 @@ func TestPushBack(t *testing.T) {
 }
 
 func TestPopBack(t *testing.T) {
-	v := Create[int]()
+	v := New[int]()
 	v.PushBack(10)
 	v.PopBack()
 	if v.Size() != 0 {
@@ -56,7 +56,7 @@ func TestPopBack(t *testing.T) {
 }
 
 func TestClear(t *testing.T) {
-	v := Create[int]()
+	v := New[int]()
 	v.PushBack(10)
 	v.Clear()
 	if v.Size() != 0 {
@@ -78,7 +78,7 @@ func TestReserve(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			v := CreateWithCapacity[int](tt.initialCap)
+			v := NewWithCapacity[int](tt.initialCap)
 			v.Reserve(tt.reserveAmount)
 			if v.Capacity() != tt.expectedCap {
 				t.Errorf("Expected capacity %d, got %d", tt.expectedCap, v.Capacity())
@@ -88,7 +88,7 @@ func TestReserve(t *testing.T) {
 }
 
 func TestRemove(t *testing.T) {
-	v := Create[int]()
+	v := New[int]()
 	// Add test elements
 	v.PushBack(1)
 	v.PushBack(2)
@@ -119,8 +119,8 @@ func TestCopy(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			src := CreateWithSize[int](tt.srcSize)
-			dest := CreateWithSize[int](tt.destSize)
+			src := NewWithSize[int](tt.srcSize)
+			dest := NewWithSize[int](tt.destSize)
 
 			// Fill source with test data
 			for i := 0; i < tt.srcSize; i++ {

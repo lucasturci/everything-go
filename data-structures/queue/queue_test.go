@@ -2,8 +2,8 @@ package queue
 
 import "testing"
 
-func TestCreate(t *testing.T) {
-	q := Create[int]()
+func TestNew(t *testing.T) {
+	q := New[int]()
 	if q.Size() != 0 {
 		t.Errorf("Expected size 0, got %d", q.Size())
 	}
@@ -13,7 +13,7 @@ func TestCreate(t *testing.T) {
 }
 
 func TestPush(t *testing.T) {
-	q := Create[int]()
+	q := New[int]()
 	q.Push(10)
 	if q.Size() != 1 {
 		t.Errorf("Expected size 1, got %d", q.Size())
@@ -24,7 +24,7 @@ func TestPush(t *testing.T) {
 }
 
 func TestPop(t *testing.T) {
-	q := Create[int]()
+	q := New[int]()
 	q.Push(10)
 	q.Push(20)
 
@@ -41,7 +41,7 @@ func TestPop(t *testing.T) {
 }
 
 func TestPopEmpty(t *testing.T) {
-	q := Create[int]()
+	q := New[int]()
 	_, err := q.Pop()
 	if err == nil {
 		t.Error("Expected error when popping from empty queue")
@@ -49,7 +49,7 @@ func TestPopEmpty(t *testing.T) {
 }
 
 func TestFront(t *testing.T) {
-	q := Create[int]()
+	q := New[int]()
 	q.Push(10)
 	q.Push(20)
 
@@ -66,7 +66,7 @@ func TestFront(t *testing.T) {
 }
 
 func TestFrontEmpty(t *testing.T) {
-	q := Create[int]()
+	q := New[int]()
 	_, err := q.Front()
 	if err == nil {
 		t.Error("Expected error when getting front of empty queue")
@@ -74,7 +74,7 @@ func TestFrontEmpty(t *testing.T) {
 }
 
 func TestMultipleOperations(t *testing.T) {
-	q := Create[int]()
+	q := New[int]()
 
 	// Push elements
 	q.Push(10)
