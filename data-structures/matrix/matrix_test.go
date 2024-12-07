@@ -53,54 +53,78 @@ func TestMatrixClone(t *testing.T) {
 }
 
 func TestMatrixMultiply(t *testing.T) {
-	a := New[int](2, 3)
-	b := New[int](3, 2)
-
-	a[0][0], a[0][1], a[0][2] = 1, 2, 3
-	a[1][0], a[1][1], a[1][2] = 4, 5, 6
-
-	b[0][0], b[0][1] = 7, 8
-	b[1][0], b[1][1] = 9, 10
-	b[2][0], b[2][1] = 11, 12
-
-	expected := New[int](2, 2)
-	expected[0][0], expected[0][1] = 58, 64
-	expected[1][0], expected[1][1] = 139, 154
-
-	result, err := Multiply(a, b)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	tests := []struct {
+		name string
+		fn   func(Matrix[int], Matrix[int]) (Matrix[int], error)
+	}{
+		{"regular multiply", Multiply[int]},
+		{"fast multiply", FastMult[int]},
 	}
 
-	for i := 0; i < result.SizeRows(); i++ {
-		for j := 0; j < result.SizeCols(); j++ {
-			if result[i][j] != expected[i][j] {
-				t.Errorf("expected %d at position (%d, %d), got %d", expected[i][j], i, j, result[i][j])
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a := New[int](2, 3)
+			b := New[int](3, 2)
+
+			a[0][0], a[0][1], a[0][2] = 1, 2, 3
+			a[1][0], a[1][1], a[1][2] = 4, 5, 6
+
+			b[0][0], b[0][1] = 7, 8
+			b[1][0], b[1][1] = 9, 10
+			b[2][0], b[2][1] = 11, 12
+
+			expected := New[int](2, 2)
+			expected[0][0], expected[0][1] = 58, 64
+			expected[1][0], expected[1][1] = 139, 154
+
+			result, err := tt.fn(a, b)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
 			}
-		}
+
+			for i := 0; i < result.SizeRows(); i++ {
+				for j := 0; j < result.SizeCols(); j++ {
+					if result[i][j] != expected[i][j] {
+						t.Errorf("expected %d at position (%d, %d), got %d", expected[i][j], i, j, result[i][j])
+					}
+				}
+			}
+		})
 	}
 }
 
 func TestMatrixPower(t *testing.T) {
-	mat := New[int](2, 2)
-	mat[0][0], mat[0][1] = 1, 2
-	mat[1][0], mat[1][1] = 3, 4
-
-	expected := New[int](2, 2)
-	expected[0][0], expected[0][1] = 7, 10
-	expected[1][0], expected[1][1] = 15, 22
-
-	result, err := Power(mat, 2)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+	tests := []struct {
+		name string
+		fn   func(Matrix[int], int) (Matrix[int], error)
+	}{
+		{"regular power", Power[int]},
+		{"fast power", FastPower[int]},
 	}
 
-	for i := 0; i < result.SizeRows(); i++ {
-		for j := 0; j < result.SizeCols(); j++ {
-			if result[i][j] != expected[i][j] {
-				t.Errorf("expected %d at position (%d, %d), got %d", expected[i][j], i, j, result[i][j])
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mat := New[int](2, 2)
+			mat[0][0], mat[0][1] = 1, 2
+			mat[1][0], mat[1][1] = 3, 4
+
+			expected := New[int](2, 2)
+			expected[0][0], expected[0][1] = 7, 10
+			expected[1][0], expected[1][1] = 15, 22
+
+			result, err := tt.fn(mat, 2)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
 			}
-		}
+
+			for i := 0; i < result.SizeRows(); i++ {
+				for j := 0; j < result.SizeCols(); j++ {
+					if result[i][j] != expected[i][j] {
+						t.Errorf("expected %d at position (%d, %d), got %d", expected[i][j], i, j, result[i][j])
+					}
+				}
+			}
+		})
 	}
 }
 
