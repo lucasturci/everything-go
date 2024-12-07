@@ -2,6 +2,6 @@
 
 A repository to code everything and anything in Go.
 
-## Structure
+# Contribution
 
-Everything I code will be in a separate folder, with its package and test files, to make it as granular as possible.
+I began this project alone, but happy to accept contributors. Just raise an issue in this repo to express interest.
