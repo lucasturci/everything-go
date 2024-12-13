@@ -2,7 +2,8 @@ package queue
 
 import (
 	"errors"
-	"everything-go/data-structures/stack"
+
+	"github.com/lucasturci/everything-go/data-structures/stack"
 )
 
 // Write queue with two stacks.

@@ -2,9 +2,10 @@ package heap
 
 import (
 	"errors"
-	alg "everything-go/algorithms"
-	"everything-go/data-structures/comparator"
-	"everything-go/data-structures/vector"
+
+	alg "github.com/lucasturci/everything-go/algorithms"
+	"github.com/lucasturci/everything-go/data-structures/comparator"
+	"github.com/lucasturci/everything-go/data-structures/vector"
 
 	"cmp"
 )

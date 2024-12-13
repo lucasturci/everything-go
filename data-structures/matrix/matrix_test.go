@@ -1,8 +1,9 @@
 package matrix
 
 import (
-	"everything-go/data-structures/vector"
 	"testing"
+
+	"github.com/lucasturci/everything-go/data-structures/vector"
 )
 
 type vec = vector.Vector[int]

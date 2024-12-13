@@ -2,8 +2,9 @@ package priority_queue
 
 import (
 	"cmp"
-	"everything-go/data-structures/comparator"
-	"everything-go/data-structures/heap"
+
+	"github.com/lucasturci/everything-go/data-structures/comparator"
+	"github.com/lucasturci/everything-go/data-structures/heap"
 )
 
 type PriorityQueue[T cmp.Ordered] struct {

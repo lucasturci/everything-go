@@ -1,4 +1,4 @@
-module everything-go
+module github.com/lucasturci/everything-go
 
 go 1.23.3
 

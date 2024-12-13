@@ -2,8 +2,9 @@ package matrix
 
 import (
 	"errors"
-	"everything-go/data-structures/vector"
 	"fmt"
+
+	"github.com/lucasturci/everything-go/data-structures/vector"
 
 	"golang.org/x/exp/constraints"
 )
