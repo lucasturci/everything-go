@@ -10,6 +10,8 @@ import (
 	"cmp"
 )
 
+var ErrEmptyHeap = errors.New("empty heap")
+
 type Heap[T any, C comparator.Comparator[T]] struct {
 	vector.Vector[T]
 	cmp C
@@ -18,8 +20,17 @@ type Heap[T any, C comparator.Comparator[T]] struct {
 type MinHeap[T cmp.Ordered] struct {
 	Heap[T, comparator.Less[T]]
 }
+
+func NewMinHeap[T cmp.Ordered]() MinHeap[T] {
+	return MinHeap[T]{}
+}
+
 type MaxHeap[T cmp.Ordered] struct {
 	Heap[T, comparator.Greater[T]]
+}
+
+func NewMaxHeap[T cmp.Ordered]() MinHeap[T] {
+	return MinHeap[T]{}
 }
 
 func New[T any, C comparator.Comparator[T]]() Heap[T, C] {
@@ -50,7 +61,7 @@ func (h *Heap[T, C]) Heapify(i int) {
 
 // BubbleUp bubbles the element at i up to its correct position
 func (h *Heap[T, C]) BubbleUp(i int) {
-	for ; i > 0; i = (i >> 1) {
+	for ; i > 0; i = (i - 1) >> 1 {
 		if h.cmp.Less(h.Vector[i], h.Vector[(i-1)>>1]) {
 			alg.Swap(&h.Vector[i], &h.Vector[(i-1)>>1])
 		} else {
@@ -64,9 +75,16 @@ func (h *Heap[T, C]) Push(x T) {
 	h.BubbleUp(h.Size() - 1)
 }
 
+func (h Heap[T, C]) Top() (val T, err error) {
+	if h.Size() == 0 {
+		return val, ErrEmptyHeap
+	}
+	return h.Get(0), nil
+}
+
 func (h *Heap[T, C]) Pop() error {
 	if h.Size() == 0 {
-		return errors.New("empty heap")
+		return ErrEmptyHeap
 	}
 	alg.Swap(&h.Vector[0], &h.Vector[h.Size()-1])
 	h.PopBack()
@@ -77,7 +95,7 @@ func (h *Heap[T, C]) Pop() error {
 	return nil
 }
 
-func (h *Heap[T, C]) Get(i int) T {
+func (h Heap[T, C]) Get(i int) T {
 	return h.Vector[i]
 }
 
