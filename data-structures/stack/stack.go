@@ -10,11 +10,11 @@ func New[T any]() Stack[T] {
 }
 
 // Methods
-func (s *Stack[T]) Size() int {
-	return len(*s)
+func (s Stack[T]) Size() int {
+	return len(s)
 }
 
-func (s *Stack[T]) IsEmpty() bool {
+func (s Stack[T]) IsEmpty() bool {
 	return s.Size() == 0
 }
 
@@ -34,11 +34,11 @@ func (s *Stack[T]) Pop() (ret T, err error) {
 	return
 }
 
-func (s *Stack[T]) Top() (ret T, err error) {
+func (s Stack[T]) Top() (ret T, err error) {
 	if s.IsEmpty() {
 		return ret, errors.New("stack is empty")
 	}
-	return (*s)[s.Size()-1], nil
+	return (s)[s.Size()-1], nil
 }
 
 // Functions
