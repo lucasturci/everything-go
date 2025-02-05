@@ -24,11 +24,11 @@ func (q *Queue[T]) Push(x T) {
 	q.r.Push(x)
 }
 
-func (q *Queue[T]) IsEmpty() bool {
+func (q Queue[T]) IsEmpty() bool {
 	return q.l.IsEmpty() && q.r.IsEmpty()
 }
 
-func (q *Queue[T]) Size() int {
+func (q Queue[T]) Size() int {
 	return q.l.Size() + q.r.Size()
 }
 
@@ -47,7 +47,7 @@ func (q *Queue[T]) Pop() (ret T, err error) {
 	return q.l.Pop()
 }
 
-func (q *Queue[T]) Front() (ret T, err error) {
+func (q Queue[T]) Front() (ret T, err error) {
 	if q.IsEmpty() {
 		return ret, errors.New("queue is empty")
 	}
