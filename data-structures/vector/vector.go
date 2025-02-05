@@ -22,12 +22,16 @@ func NewWithCapacity[T any](n int) Vector[T] {
 }
 
 // Methods
-func (v *Vector[T]) Size() int {
-	return len(*v)
+func (v Vector[T]) Size() int {
+	return len(v)
 }
 
-func (v *Vector[T]) Capacity() int {
-	return cap(*v)
+func (v Vector[T]) IsEmpty() bool {
+	return v.Size() == 0
+}
+
+func (v Vector[T]) Capacity() int {
+	return cap(v)
 }
 
 func (v *Vector[T]) PushBack(element T) {

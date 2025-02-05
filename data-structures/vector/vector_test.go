@@ -147,3 +147,24 @@ func TestCopy(t *testing.T) {
 		})
 	}
 }
+
+func TestIsEmpty(t *testing.T) {
+	tests := []struct {
+		name     string
+		elements []int
+		want     bool
+	}{
+		{"empty vector", []int{}, true},
+		{"non-empty vector", []int{1, 2, 3}, false},
+		{"single element", []int{1}, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v := NewWithElements(tt.elements)
+			if got := v.IsEmpty(); got != tt.want {
+				t.Errorf("IsEmpty() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
