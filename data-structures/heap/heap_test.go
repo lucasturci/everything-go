@@ -52,7 +52,7 @@ func TestHeapEmpty(t *testing.T) {
 }
 
 func TestHeapSet(t *testing.T) {
-	h := MinHeap[int]{}
+	h := NewMinHeap[int]()
 
 	h.Push(5)
 	h.Push(3)
@@ -72,7 +72,7 @@ func TestHeapSet(t *testing.T) {
 }
 
 func TestMaxHeap(t *testing.T) {
-	h := MaxHeap[int]{}
+	h := NewMaxHeap[int]()
 
 	h.Push(5)
 	h.Push(3)

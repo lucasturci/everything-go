@@ -29,8 +29,8 @@ type MaxHeap[T cmp.Ordered] struct {
 	Heap[T, comparator.Greater[T]]
 }
 
-func NewMaxHeap[T cmp.Ordered]() MinHeap[T] {
-	return MinHeap[T]{}
+func NewMaxHeap[T cmp.Ordered]() MaxHeap[T] {
+	return MaxHeap[T]{}
 }
 
 func New[T any, C comparator.Comparator[T]]() Heap[T, C] {
