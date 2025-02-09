@@ -1,6 +1,9 @@
 package vector
 
-import "errors"
+import (
+	"errors"
+	"iter"
+)
 
 type Vector[T any] []T
 
@@ -67,4 +70,38 @@ func Copy[T any](dest Vector[T], src Vector[T]) error {
 	}
 	copy(dest, src)
 	return nil
+}
+
+// Iterations
+
+func (v Vector[T]) Values() func(yield func(T) bool) {
+	return func(yield func(T) bool) {
+		for i := 0; i < v.Size(); i++ {
+			if !yield(v[i]) {
+				return
+			}
+		}
+	}
+}
+
+func (v Vector[T]) Backward() func(yield func(T) bool) {
+	return func(yield func(T) bool) {
+		for i := v.Size() - 1; i >= 0; i-- {
+			if !yield(v[i]) {
+				return
+			}
+		}
+	}
+}
+
+func (v *Vector[T]) AppendSeq(seq iter.Seq[T]) {
+	for x := range seq {
+		v.PushBack(x)
+	}
+}
+
+func Collect[T any](seq iter.Seq[T]) Vector[T] {
+	ans := New[T]()
+	ans.AppendSeq(seq)
+	return ans
 }

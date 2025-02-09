@@ -1,6 +1,9 @@
 package linked_list
 
-import "testing"
+import (
+	"slices"
+	"testing"
+)
 
 func TestNew(t *testing.T) {
 	ll := New[int]()
@@ -192,5 +195,76 @@ func TestPopFront(t *testing.T) {
 	front, _ := ll.Front()
 	if front != 1 {
 		t.Errorf("expected front to be 1, got %v", front)
+	}
+}
+
+func TestLinkedListIterations(t *testing.T) {
+	tests := []struct {
+		name     string
+		elements []int
+		forward  []int
+		backward []int
+	}{
+		{
+			name:     "empty list",
+			elements: []int{},
+			forward:  []int{},
+			backward: []int{},
+		},
+		{
+			name:     "single element",
+			elements: []int{1},
+			forward:  []int{1},
+			backward: []int{1},
+		},
+		{
+			name:     "multiple elements",
+			elements: []int{1, 2, 3},
+			forward:  []int{1, 2, 3},
+			backward: []int{3, 2, 1},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ll := Collect[int](slices.Values(tt.elements))
+
+			// Test Values() iteration
+			var forward []int
+			for val := range ll.Values() {
+				forward = append(forward, val)
+			}
+			if !slices.Equal(forward, tt.forward) {
+				t.Errorf("Values() = %v, want %v", forward, tt.forward)
+			}
+
+			// Test Backward() iteration
+			var backward []int
+			for val := range ll.Backward() {
+				backward = append(backward, val)
+			}
+			if !slices.Equal(backward, tt.backward) {
+				t.Errorf("Backward() = %v, want %v", backward, tt.backward)
+			}
+		})
+	}
+}
+
+func TestLinkedListAppendSeq(t *testing.T) {
+	ll := New[int]()
+	seq := []int{1, 2, 3}
+
+	ll.AppendSeq(slices.Values(seq))
+
+	if ll.Size() != len(seq) {
+		t.Errorf("Expected size %d, got %d", len(seq), ll.Size())
+	}
+
+	i := 0
+	for val := range ll.Values() {
+		if val != seq[i] {
+			t.Errorf("At index %d: got %d, want %d", i, val, seq[i])
+		}
+		i++
 	}
 }

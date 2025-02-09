@@ -36,7 +36,7 @@ All the containers that can be iterated upon sequentially without being mutated 
 
 so you can do
 ```go
-for v := range vector.Values(myContainer) {
+for v := range vec.Values() {
     fmt.Println(v)
 }
 ```

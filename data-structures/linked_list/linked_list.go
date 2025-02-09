@@ -1,6 +1,9 @@
 package linked_list
 
-import "errors"
+import (
+	"errors"
+	"iter"
+)
 
 var (
 	ErrEmpty    = errors.New("linked list is empty")
@@ -25,6 +28,12 @@ type LinkedList[T any] struct {
 
 func New[T any]() LinkedList[T] {
 	return LinkedList[T]{}
+}
+
+func (ll *LinkedList[T]) Clear() {
+	ll.head = nil
+	ll.tail = nil
+	ll.size = 0
 }
 
 func (ll LinkedList[T]) Front() (ret T, err error) {
@@ -111,4 +120,37 @@ func (ll *LinkedList[T]) PopFront() error {
 	}
 
 	return nil
+}
+
+// Iterations
+func (ll *LinkedList[T]) Values() func(yield func(T) bool) {
+	return func(yield func(T) bool) {
+		for cur := ll.head; cur != nil; cur = cur.right {
+			if !yield(cur.val) {
+				return
+			}
+		}
+	}
+}
+
+func (ll *LinkedList[T]) Backward() func(yield func(T) bool) {
+	return func(yield func(T) bool) {
+		for cur := ll.tail; cur != nil; cur = cur.left {
+			if !yield(cur.val) {
+				return
+			}
+		}
+	}
+}
+
+func (ll *LinkedList[T]) AppendSeq(seq iter.Seq[T]) {
+	for x := range seq {
+		ll.PushBack(x)
+	}
+}
+
+func Collect[T any](seq iter.Seq[T]) LinkedList[T] {
+	ans := New[T]()
+	ans.AppendSeq(seq)
+	return ans
 }

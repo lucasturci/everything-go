@@ -1,6 +1,7 @@
 package vector
 
 import (
+	"slices"
 	"testing"
 )
 
@@ -166,5 +167,89 @@ func TestIsEmpty(t *testing.T) {
 				t.Errorf("IsEmpty() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestVectorIterations(t *testing.T) {
+	tests := []struct {
+		name     string
+		elements []int
+		forward  []int
+		backward []int
+	}{
+		{
+			name:     "empty vector",
+			elements: []int{},
+			forward:  []int{},
+			backward: []int{},
+		},
+		{
+			name:     "single element",
+			elements: []int{1},
+			forward:  []int{1},
+			backward: []int{1},
+		},
+		{
+			name:     "multiple elements",
+			elements: []int{1, 2, 3},
+			forward:  []int{1, 2, 3},
+			backward: []int{3, 2, 1},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v := NewWithElements(tt.elements)
+
+			// Test Values() iteration
+			var forward []int
+			for val := range v.Values() {
+				forward = append(forward, val)
+			}
+			if !slices.Equal(forward, tt.forward) {
+				t.Errorf("Values() = %v, want %v", forward, tt.forward)
+			}
+
+			// Test Backward() iteration
+			var backward []int
+			for val := range v.Backward() {
+				backward = append(backward, val)
+			}
+			if !slices.Equal(backward, tt.backward) {
+				t.Errorf("Backward() = %v, want %v", backward, tt.backward)
+			}
+		})
+	}
+}
+
+func TestVectorAppendSeq(t *testing.T) {
+	v := New[int]()
+	seq := []int{1, 2, 3}
+
+	v.AppendSeq(slices.Values(seq))
+
+	if v.Size() != len(seq) {
+		t.Errorf("Expected size %d, got %d", len(seq), v.Size())
+	}
+
+	for i, want := range seq {
+		if v[i] != want {
+			t.Errorf("At index %d: got %d, want %d", i, v[i], want)
+		}
+	}
+}
+
+func TestVectorCollect(t *testing.T) {
+	seq := []int{1, 2, 3}
+	v := Collect(slices.Values(seq))
+
+	if v.Size() != len(seq) {
+		t.Errorf("Expected size %d, got %d", len(seq), v.Size())
+	}
+
+	for i, want := range seq {
+		if v[i] != want {
+			t.Errorf("At index %d: got %d, want %d", i, v[i], want)
+		}
 	}
 }
