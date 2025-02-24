@@ -14,7 +14,6 @@ import (
 )
 
 var n, m int
-var mat matrix.Matrix[int]
 
 const CELL_SIZE = 20
 const TICK_SPEED = 10
@@ -130,12 +129,13 @@ func main() {
 		usage()
 	}
 
-	n, err := strconv.Atoi(os.Args[1])
+	var err error
+	n, err = strconv.Atoi(os.Args[1])
 	if err != nil {
 		usage()
 	}
 
-	m := n
+	m = n
 	if argc == 3 {
 		m, err = strconv.Atoi(os.Args[2])
 		if err != nil {
