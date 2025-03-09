@@ -28,6 +28,10 @@ type Tree[Tk constraints.Ordered, Tv any] interface {
 	FirstGreaterThan(Tk) (Tk, Tv, error)
 	FirstGreaterOrEqualThan(Tk) (Tk, Tv, error)
 	At(int) (Tk, Tv, error)
+
+	// Write
+	Set(Tk, Tv) error
+	Remove(Tk) error
 }
 
 // errors
