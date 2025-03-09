@@ -1,5 +1,9 @@
 package main
 
+/**
+* The pattern fetching functionality stopped working after captcha was added to the website.
+**/
+
 /*
 
 TODO:
