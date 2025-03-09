@@ -23,6 +23,7 @@ type Tree[Tk constraints.Ordered, Tv any] interface {
 	Size() int
 	Traverse(func(Tk, Tv))
 	Print()
+	Count(Tk) int
 	CountLessThan(Tk) int
 	CountMoreThan(Tk) int
 	FirstGreaterThan(Tk) (Tk, Tv, error)
@@ -93,6 +94,10 @@ func (t *BaseTree[Tk, Tv]) Traverse(f func(Tk, Tv)) {
 	t.lef.Traverse(f)
 	f(t.key, t.val)
 	t.rig.Traverse(f)
+}
+
+func (t *BaseTree[Tk, Tv]) Count(key Tk) int {
+	return t.Size() - t.CountMoreThan(key) - t.CountLessThan(key)
 }
 
 func (t *BaseTree[Tk, Tv]) CountLessThan(key Tk) int {
