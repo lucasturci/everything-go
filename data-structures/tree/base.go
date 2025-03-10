@@ -8,13 +8,20 @@ import (
 )
 
 type BaseTree[Tk constraints.Ordered, Tv any] struct {
-	lef, rig *BaseTree[Tk, Tv]
+	lef, rig Tree[Tk, Tv]
 	cnt      int
 	key      Tk
 	val      Tv
 }
 
 type Tree[Tk constraints.Ordered, Tv any] interface {
+	// Getters
+	left() Tree[Tk, Tv]
+	right() Tree[Tk, Tv]
+	Key() Tk
+	Val() Tv
+	count() int
+
 	// Read only
 	Find(key Tk) (Tv, error)
 	Min() (Tk, Tv, error)
@@ -26,12 +33,14 @@ type Tree[Tk constraints.Ordered, Tv any] interface {
 	Count(Tk) int
 	CountLessThan(Tk) int
 	CountMoreThan(Tk) int
+	firstGreaterThanImpl(Tk, bool) (Tk, Tv, error)
 	FirstGreaterThan(Tk) (Tk, Tv, error)
 	FirstGreaterOrEqualThan(Tk) (Tk, Tv, error)
 	At(int) (Tk, Tv, error)
 
 	// Write
 	Set(Tk, Tv) error
+	Add(Tk, Tv) error
 	Remove(Tk) error
 }
 
@@ -42,37 +51,43 @@ var (
 	ErrOutOfBounds = errors.New("index is out of bounds")
 )
 
+func (t *BaseTree[Tk, Tv]) left() Tree[Tk, Tv]  { return t.lef }
+func (t *BaseTree[Tk, Tv]) right() Tree[Tk, Tv] { return t.rig }
+func (t *BaseTree[Tk, Tv]) Key() Tk             { return t.key }
+func (t *BaseTree[Tk, Tv]) Val() Tv             { return t.val }
+func (t *BaseTree[Tk, Tv]) count() int          { return t.cnt }
+
 func (t *BaseTree[Tk, Tv]) Find(key Tk) (ret Tv, err error) {
 	if t == nil {
 		return ret, ErrNotFound
 	}
 
-	if t.key == key {
-		return t.val, nil
-	} else if key > t.key {
-		return t.rig.Find(key)
+	if t.Key() == key {
+		return t.Val(), nil
+	} else if key > t.Key() {
+		return t.right().Find(key)
 	}
-	return t.lef.Find(key)
+	return t.left().Find(key)
 }
 
 func (t *BaseTree[Tk, Tv]) Min() (key Tk, val Tv, err error) {
 	if t == nil {
 		return key, val, ErrEmpty
 	}
-	if t.lef == nil {
-		return t.key, t.val, nil
+	if t.left() == nil {
+		return t.Key(), t.Val(), nil
 	}
-	return t.lef.Min()
+	return t.left().Min()
 }
 
 func (t *BaseTree[Tk, Tv]) Max() (key Tk, val Tv, err error) {
 	if t == nil {
 		return key, val, ErrEmpty
 	}
-	if t.rig == nil {
-		return t.key, t.val, nil
+	if t.right() == nil {
+		return t.Key(), t.Val(), nil
 	}
-	return t.rig.Max()
+	return t.right().Max()
 }
 
 func (t *BaseTree[Tk, Tv]) IsEmpty() bool {
@@ -83,7 +98,7 @@ func (t *BaseTree[Tk, Tv]) Size() int {
 	if t == nil {
 		return 0
 	}
-	return t.cnt
+	return t.count()
 }
 
 // Traverse traverses the tree in-order and invokes function f
@@ -91,9 +106,9 @@ func (t *BaseTree[Tk, Tv]) Traverse(f func(Tk, Tv)) {
 	if t == nil {
 		return
 	}
-	t.lef.Traverse(f)
-	f(t.key, t.val)
-	t.rig.Traverse(f)
+	t.left().Traverse(f)
+	f(t.Key(), t.Val())
+	t.right().Traverse(f)
 }
 
 func (t *BaseTree[Tk, Tv]) Count(key Tk) int {
@@ -104,20 +119,20 @@ func (t *BaseTree[Tk, Tv]) CountLessThan(key Tk) int {
 	if t == nil {
 		return 0
 	}
-	if t.key < key { // go right
-		return t.lef.Size() + 1 + t.rig.CountLessThan(key)
+	if t.Key() < key { // go right
+		return t.left().Size() + 1 + t.right().CountLessThan(key)
 	}
-	return t.lef.CountLessThan(key)
+	return t.left().CountLessThan(key)
 }
 
 func (t *BaseTree[Tk, Tv]) CountMoreThan(key Tk) int {
 	if t == nil {
 		return 0
 	}
-	if t.key > key { // go left
-		return t.rig.Size() + 1 + t.lef.CountMoreThan(key)
+	if t.Key() > key { // go left
+		return t.right().Size() + 1 + t.left().CountMoreThan(key)
 	}
-	return t.rig.CountMoreThan(key)
+	return t.right().CountMoreThan(key)
 }
 
 func (t *BaseTree[Tk, Tv]) printImpl() {
@@ -141,13 +156,13 @@ func (t *BaseTree[Tk, Tv]) firstGreaterThanImpl(key Tk, orEqual bool) (k Tk, v T
 	if t == nil {
 		return k, v, ErrNotFound
 	}
-	shouldGoRight := t.key < key || (!orEqual && t.key == key)
+	shouldGoRight := t.Key() < key || (!orEqual && t.Key() == key)
 	if shouldGoRight { // go right
-		return t.rig.firstGreaterThanImpl(key, orEqual)
+		return t.right().firstGreaterThanImpl(key, orEqual)
 	}
-	lk, lv, err := t.lef.firstGreaterThanImpl(key, orEqual)
+	lk, lv, err := t.left().firstGreaterThanImpl(key, orEqual)
 	if err != nil { // that means I am the greater
-		return t.key, t.val, nil
+		return t.Key(), t.Val(), nil
 	}
 	return lk, lv, nil
 }
@@ -164,11 +179,11 @@ func (t *BaseTree[Tk, Tv]) At(idx int) (k Tk, v Tv, err error) {
 	if t == nil {
 		return k, v, ErrOutOfBounds
 	}
-	sizeLeft := t.lef.Size()
+	sizeLeft := t.left().Size()
 	if idx == sizeLeft {
-		return t.key, t.val, nil
+		return t.Key(), t.Val(), nil
 	} else if idx > sizeLeft {
-		return t.rig.At(idx - sizeLeft - 1)
+		return t.right().At(idx - sizeLeft - 1)
 	}
-	return t.lef.At(idx)
+	return t.left().At(idx)
 }
