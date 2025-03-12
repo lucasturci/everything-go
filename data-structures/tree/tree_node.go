@@ -14,6 +14,8 @@ type BaseTreeNode[Tk constraints.Ordered, Tv any] struct {
 	val      Tv
 }
 
+var _ TreeNode[int, any] = &BaseTreeNode[int, any]{}
+
 type TreeNode[Tk constraints.Ordered, Tv any] interface {
 	// Getters
 	left() TreeNode[Tk, Tv]
