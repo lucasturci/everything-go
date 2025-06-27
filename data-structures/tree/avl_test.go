@@ -2,6 +2,7 @@ package tree
 
 import (
 	"maps"
+	"math/rand"
 	"testing"
 )
 
@@ -305,5 +306,29 @@ func TestBasicAddAndRemove(t *testing.T) {
 	expected := map[int]int{6: 6, 9: 9, 18: 18}
 	if !maps.Equal(items, expected) {
 		t.Errorf("Values() = %v, want %v", items, expected)
+	}
+}
+
+func TestAvlSort(t *testing.T) {
+	var iterations int = 1000
+	var size int = 1000
+
+	r := rand.New(rand.NewSource(345))
+	for i := 0; i < iterations; i++ {
+		tree := NewAvlTree[int, int]()
+		for j := 0; j < size; j++ {
+			x := r.Intn(1000000000)
+			tree.Add(x, x)
+		}
+		items := []int{}
+		for k, _ := range tree.Values() {
+			items = append(items, k)
+		}
+		for i := 0; i+1 < len(items); i++ {
+			if items[i] > items[i+1] {
+				t.Errorf("Values are not sorted, items[%d] = %d, items[%d] = %d", i, items[i], i+1, items[i+1])
+				break
+			}
+		}
 	}
 }
